@@ -87,8 +87,7 @@ async fn main() -> Result<(), Box<dyn error::Error>> {
 
                 let images = images.into_iter().take(50).collect();
 
-                api.send(AnswerInlineQuery::new(message.id, images).cache_time(0))
-                    .await?;
+                api.send(AnswerInlineQuery::new(message.id, images)).await?;
             }
         };
     }
