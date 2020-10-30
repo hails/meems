@@ -87,7 +87,8 @@ async fn main() -> Result<(), Box<dyn error::Error>> {
 
                 let images = images.into_iter().take(50).collect();
 
-                api.send(AnswerInlineQuery::new(message.id, images)).await?;
+                api.send(AnswerInlineQuery::new(message.id, images).cache_time(0))
+                    .await?;
             }
         };
     }
@@ -104,7 +105,8 @@ fn parse_results(results: Vec<SearchifyResults>) -> Vec<InlineQueryResult> {
                 if format == "gif" || i.icon_url.ends_with(".gif") {
                     None
                 } else {
-                    let photo_url = format!("{}{}@jpg", imgproxy_url, i.icon_url.clone());
+                    let photo_url = format!("{}/{}@jpg", imgproxy_url, i.icon_url.clone());
+                    println!("{}", photo_url);
                     Some(InlineQueryResult::InlineQueryResultPhoto(
                         InlineQueryResultPhoto {
                             id: i.docid.clone(),
@@ -125,10 +127,8 @@ fn parse_results(results: Vec<SearchifyResults>) -> Vec<InlineQueryResult> {
                 if i.icon_url.ends_with(".gif") {
                     None
                 } else {
-                    let photo_url = format!(
-                        "https://kymbotimgproxy.herokuapp.com//plain/{}@jpg",
-                        i.icon_url.clone()
-                    );
+                    let photo_url = format!("{}/{}@jpg", imgproxy_url, i.icon_url.clone());
+                    println!("{}", photo_url);
 
                     Some(InlineQueryResult::InlineQueryResultPhoto(
                         InlineQueryResultPhoto {
